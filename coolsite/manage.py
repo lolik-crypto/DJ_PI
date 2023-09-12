@@ -1,3 +1,9 @@
+#cd coolsite
+#python manage.py runserver
+#python manage.py startapp vomen
+
+
+
 #!/usr/bin/env python
 """Django's command-line utility for administrative tasks."""
 import os
