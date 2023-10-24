@@ -14,20 +14,24 @@ Including another URLconf
     1. Import the include() function: from django.urls import include, path
     2. Add a URL to urlpatterns:  path('blog/', include('blog.urls'))
 """
+from sqlite3 import register_converter
+
 from django.contrib import admin
 from django.urls import path, include
 from vomen.views import *
 
-
-
 urlpatterns = [
     path('admin/', admin.site.urls),
-    path('vomen/',include('vomen.urls')),
-    path('cats/<int:cats_id>/', categories),
-    path('cats/<slug:cats>/', categories_slug),
+    path('vomen/', include('vomen.urls')),
+    path('cats/<int:cats_id>/', categories, name='num_id'),
+    path('cats/<slug:cats>/', categories_slug, name='cat_slug'),
     path('students/<int:students_id>/', students),
     path('students/<slug:students>/', students_slug),
     path('studo/<slug:students>/', stud_slug),
-    path("spisok/<int:key> ",spisok),
-    path('date/<int:datee>/',date),
+    path("spisok/<int:key> ", spisok),
+    path('date/<int:datee>/', date),
 ]
+handler404 = pageNotFound
+handler500 = InternalServerError
+handler403 = Forbidden
+handler400 = BadRequest

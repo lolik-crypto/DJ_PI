@@ -1,10 +1,12 @@
-from django.http import HttpResponse
-from django.shortcuts import render
+from django.http import HttpResponse, Http404, HttpResponseNotFound
+from django.shortcuts import render, redirect
+from django.template.loader import render_to_string
+
 dir = {
         '1': ['Игнатьев А.А.',' 2001'],
         '2': ['Коновалов А.',' 2003'],
         '3': ['Тузов А. 2003'],
-        '4': ['Ковалёв А. 2002'],
+        '4': ['Ковалёв А. 2005'],
         '5': ['Король Б. 2002'],
         '6': ['Снытко Р. 2004'],
         '7': ['Лебедев Д. 2005'],
@@ -12,6 +14,9 @@ dir = {
         '9': ['Лелетко П. 2001'],
         '10': ['Селебин А. 2003'],
     }
+def index(request):
+    print(request.GET)
+    return HttpResponse(f"Страница приложения vomen <dr> {dict(request.GET) ['name']}")
 def index(request):
     return HttpResponse("<a href=cod/>Страницу приложения видно 1</a><br><a href=cot/>Страницу приложения видно 2</a>")
 
@@ -36,17 +41,17 @@ def spisok(request,key):
 
     return HttpResponse(f"<h1> Список участников № {dir[key]} </h1>")
 def moon(request):
-    return HttpResponse("<h2> Это же МАРРИО- </h2>")
+    return HttpResponse("<h2> 3 путь  </h2>")
 def moon1(request):
-    return HttpResponse("Кот")
+    return HttpResponse("машина")
 def moon2(request):
-    return HttpResponse("<img src=https://dobrovserdce.ru/images/2022/11/02/kot%20Fedya_large.jpeg /img>")
+    return HttpResponse("<img src=http://img.dailyauto.ru/2011/06/BMW_M5_Sedan_2012_dailyauto.ru_02.jpg /img>")
 date= {
         "2001": ['Игнатьев А.А. 28.06.2001','Лелетко П. 2001'],
-        "2002": ['Ковалёв А. 2002','Король Б. 2002'],
+        "2002": ['Король Б. 2002'],
         "2003": ['Студентов этого года нет'],
         "2004": ['Тузов А. 2004','Коновалов А. 2004','Снытко Р. 2004','Лебедев Д. 2004','Селебин А. 2004'],
-        "2005": ['Мартыненко Д.Д 2005'],
+        "2005": ['Мартыненко Д.Д 2005''Ковалёв А. 2005'],
 
     }
 def date(request,datee):
@@ -62,3 +67,36 @@ def date(request,datee):
         return HttpResponse(f"<h1> Студенты {dir[str(datee)]} найдены </h1>")
     else:
         return HttpResponse(f"<h1>Студента с таким годом {datee} нет</h1>")
+def pageNotFound(request,exception):
+    return HttpResponse(f"<h1> Страница не найдена <br>{exception} </h1>")
+def InternalServerError(request):
+    return HttpResponseNotFound('<h1> Ошибка на стороне сервера </h1>')
+
+
+def Forbidden(request, exception):
+    return HttpResponseNotFound('<h1> Доступ запрещен</h1>')
+
+
+def BadRequest(request, exception):
+    return HttpResponseNotFound('<h1> Невозможно обработать запрос </h1>')
+
+
+
+menu = ['о сайте','войти','обратная связь']
+def index(request):
+    t = render_to_string('vomen/index.html',context=data)
+    return HttpResponse(t)
+data = {'title':'Главная страница',
+        'menu': menu,
+        'float': 21.4,
+        'value': 1,
+        'int': 5,
+        'complex': 2+3j,
+        'string' : "Hello, World, dsdf , fsf ,fsdf 5!",
+        'bool' : True,
+        'list' : [1, 2, 3, 4, 5],
+        'tuple' : (1, 2, 3, 4, 5),
+        'set' : {1, 2, 3, 4, 5},
+        'dict' : {"name": "John", "age": 30, "city": "New York"}
+}
+#return render(request,('vomen/index.html'))
